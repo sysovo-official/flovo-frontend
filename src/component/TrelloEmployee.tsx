@@ -39,7 +39,7 @@ interface CardType {
 
 // --------- Config ----------
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || "",
+  baseURL: import.meta.env.VITE_API_URL || "https://sysovo-backend.vercel.app",
 });
 
 // attach token
