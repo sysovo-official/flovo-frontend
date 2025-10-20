@@ -20,8 +20,6 @@ import {
   faPlus,
   faRightFromBracket,
   faClock,
-  faCalendarDays,
-  faHourglassHalf,
 } from "@fortawesome/free-solid-svg-icons";
 
 export default function Dashboard() {
@@ -134,7 +132,7 @@ export default function Dashboard() {
   const [taskSuccess, setTaskSuccess] = useState("");
   const [taskError, setTaskError] = useState("");
   const [editingTaskId, setEditingTaskId] = useState<string | null>(null);
-  const [developers, setDevelopers] = useState([]);
+  const [developers, setDevelopers] = useState<any[]>([]);
   const [specificUser, setSpecificUser] = useState("");
 
   const handleRoleChange = async (e: { target: { value: any } }) => {

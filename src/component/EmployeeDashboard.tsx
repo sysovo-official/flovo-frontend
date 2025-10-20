@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { Box, Typography, Button } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
 import api from "../config/api";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -10,7 +9,6 @@ import {
   faCirclePause,
   faCirclePlay,
 } from "@fortawesome/free-solid-svg-icons";
-import { faTrello } from "@fortawesome/free-brands-svg-icons";
 
 type Task = {
   _id: string;
@@ -380,7 +378,6 @@ export default function EmployeeDashboard() {
         <Box sx={{ mb: 5 }}>
           <Button
             onClick={handleGoToTrello}
-            startIcon={<FontAwesomeIcon icon={faTrello} />}
             sx={{
               borderRadius: "8px",
               px: 3,
