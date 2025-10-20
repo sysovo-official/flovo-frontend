@@ -659,6 +659,28 @@ const handleGoToTrello = () => {
                 value={taskTitle}
                 onChange={(e) => setTaskTitle(e.target.value)}
                 required
+                sx={{
+                  mb: 1.5,
+                  "& .MuiOutlinedInput-root": {
+                    borderRadius: "8px",
+                    fontSize: "14px",
+                    color: "var(--text-primary)",
+                    "& fieldset": { borderColor: "var(--border)" },
+                    "&:hover fieldset": { borderColor: "var(--primary-light)" },
+                    "&.Mui-focused fieldset": {
+                      borderColor: "var(--primary)",
+                      borderWidth: "1.5px",
+                    },
+                  },
+                  "& .MuiInputLabel-root": {
+                    fontSize: "14px",
+                    color: "var(--text-secondary)",
+                    "&.Mui-focused": { color: "var(--primary)" },
+                  },
+                  "& .MuiOutlinedInput-input": {
+                    color: "var(--text-primary)",
+                  },
+                }}
               />
 
               {/* ✅ Select Role */}
@@ -670,6 +692,28 @@ const handleGoToTrello = () => {
                 value={taskRole}
                 onChange={handleRoleChange}
                 required
+                sx={{
+                  mb: 1.5,
+                  "& .MuiOutlinedInput-root": {
+                    borderRadius: "8px",
+                    fontSize: "14px",
+                    color: "var(--text-primary)",
+                    "& fieldset": { borderColor: "var(--border)" },
+                    "&:hover fieldset": { borderColor: "var(--primary-light)" },
+                    "&.Mui-focused fieldset": {
+                      borderColor: "var(--primary)",
+                      borderWidth: "1.5px",
+                    },
+                  },
+                  "& .MuiInputLabel-root": {
+                    fontSize: "14px",
+                    color: "var(--text-secondary)",
+                    "&.Mui-focused": { color: "var(--primary)" },
+                  },
+                  "& .MuiOutlinedInput-input": {
+                    color: "var(--text-primary)",
+                  },
+                }}
               >
                 <MenuItem value="Developer">Developer</MenuItem>
                 <MenuItem value="Designer">Designer</MenuItem>
@@ -687,6 +731,28 @@ const handleGoToTrello = () => {
                   margin="dense"
                   value={specificUser}
                   onChange={(e) => setSpecificUser(e.target.value)}
+                  sx={{
+                    mb: 1.5,
+                    "& .MuiOutlinedInput-root": {
+                      borderRadius: "8px",
+                      fontSize: "14px",
+                      color: "var(--text-primary)",
+                      "& fieldset": { borderColor: "var(--border)" },
+                      "&:hover fieldset": { borderColor: "var(--primary-light)" },
+                      "&.Mui-focused fieldset": {
+                        borderColor: "var(--primary)",
+                        borderWidth: "1.5px",
+                      },
+                    },
+                    "& .MuiInputLabel-root": {
+                      fontSize: "14px",
+                      color: "var(--text-secondary)",
+                      "&.Mui-focused": { color: "var(--primary)" },
+                    },
+                    "& .MuiOutlinedInput-input": {
+                      color: "var(--text-primary)",
+                    },
+                  }}
                 >
                   {/* 👇 Add this option */}
                   <MenuItem value="">Assign to all {taskRole}s</MenuItem>
