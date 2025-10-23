@@ -20,11 +20,14 @@ import {
   faPlus,
   faRightFromBracket,
   faClock,
+  faSun,
+  faMoon,
 } from "@fortawesome/free-solid-svg-icons";
+import { useTheme } from "../context/ThemeContext";
 
 export default function Dashboard() {
   const navigate = useNavigate();
-
+  const { isDarkMode, toggleTheme } = useTheme();
 
   // Auth check
   useEffect(() => {
@@ -288,25 +291,40 @@ const handleGoToTrello = () => {
           </Typography>
         </Box>
 
-        <Button
-          onClick={handleLogout}
-          startIcon={<FontAwesomeIcon icon={faRightFromBracket} />}
-          sx={{
-            borderRadius: "8px",
-            px: 2.5,
-            py: 1,
-            color: "var(--text-secondary)",
-            textTransform: "none",
-            fontWeight: 500,
-            fontSize: "14px",
-            "&:hover": {
-              bgcolor: "var(--bg-hover)",
-              color: "var(--text-primary)",
-            },
-          }}
-        >
-          Logout
-        </Button>
+        <Box sx={{ display: "flex", gap: 1, alignItems: "center" }}>
+          <IconButton
+            onClick={toggleTheme}
+            sx={{
+              color: "var(--text-secondary)",
+              "&:hover": {
+                bgcolor: "var(--bg-hover)",
+                color: "var(--primary)",
+              },
+            }}
+          >
+            <FontAwesomeIcon icon={isDarkMode ? faSun : faMoon} />
+          </IconButton>
+
+          <Button
+            onClick={handleLogout}
+            startIcon={<FontAwesomeIcon icon={faRightFromBracket} />}
+            sx={{
+              borderRadius: "8px",
+              px: 2.5,
+              py: 1,
+              color: "var(--text-secondary)",
+              textTransform: "none",
+              fontWeight: 500,
+              fontSize: "14px",
+              "&:hover": {
+                bgcolor: "var(--bg-hover)",
+                color: "var(--text-primary)",
+              },
+            }}
+          >
+            Logout
+          </Button>
+        </Box>
       </Box>
 
       {/* Main Content */}
@@ -378,6 +396,21 @@ const handleGoToTrello = () => {
             }}
           >
             Go to Trello Board
+          </Button>
+
+          <Button
+            onClick={() => navigate("/analytics")}
+            style={{
+              backgroundColor: "#10b981",
+              color: "white",
+              border: "none",
+              padding: "10px 20px",
+              borderRadius: "6px",
+              cursor: "pointer",
+              fontWeight: "bold",
+            }}
+          >
+            View Analytics
           </Button>
 
         </Box>
@@ -458,21 +491,22 @@ const handleGoToTrello = () => {
                   "& .MuiOutlinedInput-root": {
                     borderRadius: "8px",
                     fontSize: "14px",
-                    color: "var(--text-primary)",
-                    "& fieldset": { borderColor: "var(--border)" },
-                    "&:hover fieldset": { borderColor: "var(--primary-light)" },
+                    color: "#ccff00",
+                    backgroundColor: "#252525",
+                    "& fieldset": { borderColor: "#ccff00" },
+                    "&:hover fieldset": { borderColor: "#d9ff33" },
                     "&.Mui-focused fieldset": {
-                      borderColor: "var(--primary)",
-                      borderWidth: "1.5px",
+                      borderColor: "#ccff00",
+                      borderWidth: "2px",
                     },
                   },
                   "& .MuiInputLabel-root": {
                     fontSize: "14px",
-                    color: "var(--text-secondary)",
-                    "&.Mui-focused": { color: "var(--primary)" },
+                    color: "#ccff00",
+                    "&.Mui-focused": { color: "#ccff00" },
                   },
                   "& .MuiOutlinedInput-input": {
-                    color: "var(--text-primary)",
+                    color: "#ccff00",
                   },
                 }}
               />
@@ -490,21 +524,22 @@ const handleGoToTrello = () => {
                   "& .MuiOutlinedInput-root": {
                     borderRadius: "8px",
                     fontSize: "14px",
-                    color: "var(--text-primary)",
-                    "& fieldset": { borderColor: "var(--border)" },
-                    "&:hover fieldset": { borderColor: "var(--primary-light)" },
+                    color: "#ccff00",
+                    backgroundColor: "#252525",
+                    "& fieldset": { borderColor: "#ccff00" },
+                    "&:hover fieldset": { borderColor: "#d9ff33" },
                     "&.Mui-focused fieldset": {
-                      borderColor: "var(--primary)",
-                      borderWidth: "1.5px",
+                      borderColor: "#ccff00",
+                      borderWidth: "2px",
                     },
                   },
                   "& .MuiInputLabel-root": {
                     fontSize: "14px",
-                    color: "var(--text-secondary)",
-                    "&.Mui-focused": { color: "var(--primary)" },
+                    color: "#ccff00",
+                    "&.Mui-focused": { color: "#ccff00" },
                   },
                   "& .MuiOutlinedInput-input": {
-                    color: "var(--text-primary)",
+                    color: "#ccff00",
                   },
                 }}
               />
@@ -664,21 +699,22 @@ const handleGoToTrello = () => {
                   "& .MuiOutlinedInput-root": {
                     borderRadius: "8px",
                     fontSize: "14px",
-                    color: "var(--text-primary)",
-                    "& fieldset": { borderColor: "var(--border)" },
-                    "&:hover fieldset": { borderColor: "var(--primary-light)" },
+                    color: "#ccff00",
+                    backgroundColor: "#252525",
+                    "& fieldset": { borderColor: "#ccff00" },
+                    "&:hover fieldset": { borderColor: "#d9ff33" },
                     "&.Mui-focused fieldset": {
-                      borderColor: "var(--primary)",
-                      borderWidth: "1.5px",
+                      borderColor: "#ccff00",
+                      borderWidth: "2px",
                     },
                   },
                   "& .MuiInputLabel-root": {
                     fontSize: "14px",
-                    color: "var(--text-secondary)",
-                    "&.Mui-focused": { color: "var(--primary)" },
+                    color: "#ccff00",
+                    "&.Mui-focused": { color: "#ccff00" },
                   },
                   "& .MuiOutlinedInput-input": {
-                    color: "var(--text-primary)",
+                    color: "#ccff00",
                   },
                 }}
               />
@@ -697,21 +733,22 @@ const handleGoToTrello = () => {
                   "& .MuiOutlinedInput-root": {
                     borderRadius: "8px",
                     fontSize: "14px",
-                    color: "var(--text-primary)",
-                    "& fieldset": { borderColor: "var(--border)" },
-                    "&:hover fieldset": { borderColor: "var(--primary-light)" },
+                    color: "#ccff00",
+                    backgroundColor: "#252525",
+                    "& fieldset": { borderColor: "#ccff00" },
+                    "&:hover fieldset": { borderColor: "#d9ff33" },
                     "&.Mui-focused fieldset": {
-                      borderColor: "var(--primary)",
-                      borderWidth: "1.5px",
+                      borderColor: "#ccff00",
+                      borderWidth: "2px",
                     },
                   },
                   "& .MuiInputLabel-root": {
                     fontSize: "14px",
-                    color: "var(--text-secondary)",
-                    "&.Mui-focused": { color: "var(--primary)" },
+                    color: "#ccff00",
+                    "&.Mui-focused": { color: "#ccff00" },
                   },
                   "& .MuiOutlinedInput-input": {
-                    color: "var(--text-primary)",
+                    color: "#ccff00",
                   },
                 }}
               >
@@ -914,13 +951,18 @@ const handleGoToTrello = () => {
                             ? "#f0fdf4"
                             : task.status === "OnHold"
                               ? "#fef2f2"
-                              : "#fef3c7",
-                        border: `1px solid ${task.status === "Completed"
+                              : task.status === "In Progress"
+                                ? "#eff6ff"
+                                : "#fef3c7",
+                        border: `1px solid ${
+                          task.status === "Completed"
                             ? "#bbf7d0"
                             : task.status === "OnHold"
                               ? "#fecaca"
-                              : "#fde68a"
-                          }`,
+                              : task.status === "In Progress"
+                                ? "#bfdbfe"
+                                : "#fde68a"
+                        }`,
                       }}
                     >
                       <Typography
@@ -933,7 +975,9 @@ const handleGoToTrello = () => {
                               ? "var(--success)"
                               : task.status === "OnHold"
                                 ? "var(--error)"
-                                : "var(--warning)",
+                                : task.status === "In Progress"
+                                  ? "#2563eb"
+                                  : "var(--warning)",
                         }}
                       >
                         {task.status}

@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import "@fortawesome/fontawesome-free/css/all.min.css";
+import { useTheme } from "../context/ThemeContext";
 
 // --------- Types ----------
 interface UserShort {
@@ -33,7 +34,7 @@ interface CardType {
   listId: string;
   assignedTo?: string | UserShort | null;
   position: number;
-  status?: "Pending" | "OnHold" | "Completed";
+  status?: "Pending" | "In Progress" | "OnHold" | "Completed";
   dueDate?: string | null;
 }
 
@@ -54,6 +55,7 @@ api.interceptors.request.use((config) => {
 
 // --------- Component ----------
 export default function TrelloEmployee() {
+  const { isDarkMode, toggleTheme } = useTheme();
   const [boards, setBoards] = useState<Board[]>([]);
   const [selectedBoard, setSelectedBoard] = useState<Board | null>(null);
   const [lists, setLists] = useState<ListType[]>([]);
@@ -177,13 +179,13 @@ export default function TrelloEmployee() {
 
   // --------- UI ----------
   return (
-    <div style={{ display: "flex", height: "100vh", fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif", background: "#1a1a1a" }}>
+    <div style={{ display: "flex", height: "100vh", fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif", background: "var(--bg-main)" }}>
       {/* Sidebar: Boards */}
       <div style={{
         width: 280,
-        borderRight: "1px solid #2d2d2d",
+        borderRight: "1px solid var(--bg-elevated)",
         padding: 20,
-        background: "#252525",
+        background: "var(--bg-surface)",
         boxShadow: "4px 0 24px rgba(0,0,0,0.3)",
         zIndex: 10,
         display: "flex",
@@ -198,21 +200,21 @@ export default function TrelloEmployee() {
         </div>
 
         <div style={{
-          background: "#2d2d2d",
+          background: "var(--bg-elevated)",
           padding: 14,
           borderRadius: 10,
           marginBottom: 20,
-          border: "1px solid #3a3a3a"
+          border: "1px solid var(--border)"
         }}>
-          <div style={{ fontSize: 11, color: "#a0a0a0", marginBottom: 4, fontWeight: 600, letterSpacing: "0.5px" }}>LOGGED IN AS</div>
-          <div style={{ fontSize: 14, color: "#ffffff", fontWeight: 600 }}>{currentUser?.name || "Employee"}</div>
-          <div style={{ fontSize: 12, color: "#a0a0a0", marginTop: 2 }}>{currentUser?.subRole || "Employee"}</div>
+          <div style={{ fontSize: 11, color: "var(--text-secondary)", marginBottom: 4, fontWeight: 600, letterSpacing: "0.5px" }}>LOGGED IN AS</div>
+          <div style={{ fontSize: 14, color: "var(--text-primary)", fontWeight: 600 }}>{currentUser?.name || "Employee"}</div>
+          <div style={{ fontSize: 12, color: "var(--text-secondary)", marginTop: 2 }}>{currentUser?.subRole || "Employee"}</div>
         </div>
 
         <div style={{
           fontSize: 11,
           fontWeight: 700,
-          color: "#a0a0a0",
+          color: "var(--text-secondary)",
           marginBottom: 12,
           letterSpacing: "0.8px",
           textTransform: "uppercase"
@@ -221,17 +223,17 @@ export default function TrelloEmployee() {
         </div>
 
         <div style={{ flex: 1, overflowY: "auto", overflowX: "hidden" }}>
-          {loading ? <div style={{ textAlign: "center", color: "#a0a0a0", fontSize: 13 }}>Loading...</div> : null}
+          {loading ? <div style={{ textAlign: "center", color: "var(--text-secondary)", fontSize: 13 }}>Loading...</div> : null}
 
           {!loading && boards.length === 0 ? (
             <div style={{
               textAlign: "center",
               padding: 40,
-              color: "#a0a0a0",
+              color: "var(--text-secondary)",
               fontSize: 13,
-              background: "#2d2d2d",
+              background: "var(--bg-elevated)",
               borderRadius: 8,
-              border: "1px dashed #3a3a3a"
+              border: "1px dashed var(--border)"
             }}>
               <i className="fas fa-inbox" style={{ fontSize: 24, marginBottom: 10, opacity: 0.5 }}></i>
               <div>No boards assigned yet</div>
@@ -246,8 +248,8 @@ export default function TrelloEmployee() {
                 borderRadius: 8,
                 marginBottom: 10,
                 cursor: "pointer",
-                background: selectedBoard?._id === b._id ? "#CCFF00" : "#2d2d2d",
-                border: selectedBoard?._id === b._id ? "2px solid #CCFF00" : "1px solid #3a3a3a",
+                background: selectedBoard?._id === b._id ? "#CCFF00" : "var(--bg-elevated)",
+                border: selectedBoard?._id === b._id ? "2px solid #CCFF00" : "1px solid var(--border)",
                 transition: "all 0.2s ease",
                 boxShadow: selectedBoard?._id === b._id
                   ? "0 2px 8px rgba(204, 255, 0, 0.3)"
@@ -256,14 +258,14 @@ export default function TrelloEmployee() {
               onClick={() => selectBoard(b)}
               onMouseEnter={(e) => {
                 if (selectedBoard?._id !== b._id) {
-                  e.currentTarget.style.background = "#333333";
-                  e.currentTarget.style.borderColor = "#4a4a4a";
+                  e.currentTarget.style.background = "var(--bg-hover)";
+                  e.currentTarget.style.borderColor = "var(--border-light)";
                 }
               }}
               onMouseLeave={(e) => {
                 if (selectedBoard?._id !== b._id) {
-                  e.currentTarget.style.background = "#2d2d2d";
-                  e.currentTarget.style.borderColor = "#3a3a3a";
+                  e.currentTarget.style.background = "var(--bg-elevated)";
+                  e.currentTarget.style.borderColor = "var(--border)";
                 }
               }}
             >
@@ -271,7 +273,7 @@ export default function TrelloEmployee() {
                 fontWeight: 600,
                 fontSize: 14,
                 marginBottom: 4,
-                color: selectedBoard?._id === b._id ? "#1a1a1a" : "#ffffff",
+                color: selectedBoard?._id === b._id ? "var(--bg-main)" : "var(--text-primary)",
                 letterSpacing: "-0.2px",
                 whiteSpace: "nowrap",
                 overflow: "hidden",
@@ -279,7 +281,7 @@ export default function TrelloEmployee() {
               }}>{b.name}</div>
               <div style={{
                 fontSize: 11,
-                color: selectedBoard?._id === b._id ? "#333333" : "#a0a0a0",
+                color: selectedBoard?._id === b._id ? "var(--bg-hover)" : "var(--text-secondary)",
                 lineHeight: 1.4,
                 whiteSpace: "nowrap",
                 overflow: "hidden",
@@ -291,16 +293,16 @@ export default function TrelloEmployee() {
       </div>
 
       {/* Main: Board content */}
-      <div style={{ flex: 1, padding: 28, overflowX: "auto", background: "#1a1a1a" }}>
+      <div style={{ flex: 1, padding: 28, overflowX: "auto", background: "var(--bg-main)" }}>
         {!selectedBoard ? (
           <div style={{
             padding: 80,
             textAlign: "center",
-            color: "#a0a0a0",
+            color: "var(--text-secondary)",
             fontSize: 16,
-            background: "#252525",
+            background: "var(--bg-surface)",
             borderRadius: 16,
-            border: "1px solid #3a3a3a"
+            border: "1px solid var(--border)"
           }}>
             <i className="fas fa-arrow-left" style={{ marginRight: 10, fontSize: 18 }}></i>
             Select a board to view your assigned tasks
@@ -312,31 +314,62 @@ export default function TrelloEmployee() {
               alignItems: "center",
               justifyContent: "space-between",
               marginBottom: 24,
-              background: "#252525",
+              background: "var(--bg-surface)",
               padding: 20,
               borderRadius: 12,
               boxShadow: "0 4px 16px rgba(0,0,0,0.3)",
-              border: "1px solid #3a3a3a"
+              border: "1px solid var(--border)"
             }}>
               <div>
                 <h2 style={{
                   margin: "0 0 6px 0",
                   fontSize: 28,
                   fontWeight: 700,
-                  color: "#ffffff",
+                  color: "var(--text-primary)",
                   letterSpacing: "-0.5px"
                 }}>{selectedBoard.name}</h2>
-                <div style={{ fontSize: 14, color: "#a0a0a0" }}>{selectedBoard.description || "No description"}</div>
+                <div style={{ fontSize: 14, color: "var(--text-secondary)" }}>{selectedBoard.description || "No description"}</div>
               </div>
 
-              <div style={{
-                padding: "10px 20px",
-                background: "#2d2d2d",
-                borderRadius: 8,
-                border: "1px solid #CCFF00"
-              }}>
-                <div style={{ fontSize: 11, color: "#CCFF00", marginBottom: 2, fontWeight: 600 }}>VIEW ONLY</div>
-                <div style={{ fontSize: 13, color: "#ffffff", fontWeight: 600 }}>You can only update task status</div>
+              <div style={{ display: "flex", gap: 12, alignItems: "center" }}>
+                <button
+                  onClick={toggleTheme}
+                  style={{
+                    background: "var(--bg-elevated)",
+                    border: "1px solid var(--border)",
+                    borderRadius: 8,
+                    padding: "8px 12px",
+                    cursor: "pointer",
+                    fontSize: 18,
+                    transition: "all 0.2s ease",
+                    color: "var(--text-secondary)",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center"
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.background = "var(--bg-hover)";
+                    e.currentTarget.style.borderColor = "#CCFF00";
+                    e.currentTarget.style.color = "#CCFF00";
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.background = "var(--bg-elevated)";
+                    e.currentTarget.style.borderColor = "var(--border)";
+                    e.currentTarget.style.color = "var(--text-secondary)";
+                  }}
+                >
+                  <i className={isDarkMode ? "fas fa-sun" : "fas fa-moon"}></i>
+                </button>
+
+                <div style={{
+                  padding: "10px 20px",
+                  background: "var(--bg-elevated)",
+                  borderRadius: 8,
+                  border: "1px solid #CCFF00"
+                }}>
+                  <div style={{ fontSize: 11, color: "#CCFF00", marginBottom: 2, fontWeight: 600 }}>VIEW ONLY</div>
+                  <div style={{ fontSize: 13, color: "var(--text-primary)", fontWeight: 600 }}>You can only update task status</div>
+                </div>
               </div>
             </div>
 
@@ -347,11 +380,11 @@ export default function TrelloEmployee() {
                   style={{
                     minWidth: 300,
                     maxWidth: 320,
-                    background: "#252525",
+                    background: "var(--bg-surface)",
                     padding: 14,
                     borderRadius: 12,
                     boxShadow: "0 4px 16px rgba(0,0,0,0.3)",
-                    border: "1px solid #3a3a3a",
+                    border: "1px solid var(--border)",
                   }}
                 >
                   <div style={{
@@ -360,17 +393,17 @@ export default function TrelloEmployee() {
                     alignItems: "center",
                     marginBottom: 12,
                     paddingBottom: 10,
-                    borderBottom: "2px solid #3a3a3a"
+                    borderBottom: "2px solid var(--border)"
                   }}>
                     <strong style={{
                       fontSize: 16,
                       fontWeight: 700,
-                      color: "#ffffff",
+                      color: "var(--text-primary)",
                       letterSpacing: "-0.3px"
                     }}>{list.title}</strong>
                     <span style={{
                       fontSize: 12,
-                      color: "#1a1a1a",
+                      color: "var(--bg-main)",
                       background: "#CCFF00",
                       padding: "4px 10px",
                       borderRadius: 12,
@@ -390,33 +423,33 @@ export default function TrelloEmployee() {
                             padding: 12,
                             marginBottom: 8,
                             borderRadius: 8,
-                            background: "#2d2d2d",
+                            background: "var(--bg-elevated)",
                             boxShadow: "0 2px 8px rgba(0,0,0,0.2)",
                             cursor: "pointer",
-                            border: "1px solid #3a3a3a",
+                            border: "1px solid var(--border)",
                             transition: "all 0.2s ease",
                           }}
                           onMouseEnter={(e) => {
-                            e.currentTarget.style.background = "#333333";
+                            e.currentTarget.style.background = "var(--bg-hover)";
                             e.currentTarget.style.borderColor = "#CCFF00";
                           }}
                           onMouseLeave={(e) => {
-                            e.currentTarget.style.background = "#2d2d2d";
-                            e.currentTarget.style.borderColor = "#3a3a3a";
+                            e.currentTarget.style.background = "var(--bg-elevated)";
+                            e.currentTarget.style.borderColor = "var(--border)";
                           }}
                         >
                           <div style={{
                             fontWeight: 600,
                             fontSize: 15,
                             marginBottom: 8,
-                            color: "#ffffff",
+                            color: "var(--text-primary)",
                             letterSpacing: "-0.3px",
                             lineHeight: 1.4
                           }}>{card.title}</div>
                           {card.description && (
                             <div style={{
                               fontSize: 13,
-                              color: "#a0a0a0",
+                              color: "var(--text-secondary)",
                               marginBottom: 10,
                               lineHeight: 1.5
                             }}>{card.description}</div>
@@ -444,8 +477,8 @@ export default function TrelloEmployee() {
                             {card.dueDate && (
                               <span style={{
                                 fontSize: 11,
-                                color: "#ffffff",
-                                background: "#3a3a3a",
+                                color: "var(--text-primary)",
+                                background: "var(--border)",
                                 padding: "4px 10px",
                                 borderRadius: 14,
                                 fontWeight: 600
@@ -461,7 +494,7 @@ export default function TrelloEmployee() {
                       <div style={{
                         textAlign: "center",
                         padding: 20,
-                        color: "#a0a0a0",
+                        color: "var(--text-secondary)",
                         fontSize: 12,
                         fontStyle: "italic"
                       }}>
@@ -496,23 +529,23 @@ export default function TrelloEmployee() {
           <div
             onClick={(e) => e.stopPropagation()}
             style={{
-              background: "#252525",
+              background: "var(--bg-surface)",
               borderRadius: 12,
               padding: 24,
               width: 500,
               maxHeight: "80vh",
               overflowY: "auto",
               boxShadow: "0 8px 32px rgba(0,0,0,0.5)",
-              border: "1px solid #3a3a3a"
+              border: "1px solid var(--border)"
             }}
           >
-            <h3 style={{ margin: "0 0 20px 0", fontSize: 20, fontWeight: 700, color: "#ffffff" }}>
+            <h3 style={{ margin: "0 0 20px 0", fontSize: 20, fontWeight: 700, color: "var(--text-primary)" }}>
               <i className="fas fa-tasks" style={{ marginRight: 8, color: "#CCFF00" }}></i>
               Update Task Status
             </h3>
 
             <div style={{ marginBottom: 16 }}>
-              <label style={{ display: "block", marginBottom: 6, fontWeight: 600, fontSize: 14, color: "#ffffff" }}>Title</label>
+              <label style={{ display: "block", marginBottom: 6, fontWeight: 600, fontSize: 14, color: "var(--text-primary)" }}>Title</label>
               <input
                 value={editingCard.title}
                 disabled
@@ -520,10 +553,10 @@ export default function TrelloEmployee() {
                   width: "100%",
                   padding: 10,
                   borderRadius: 6,
-                  border: "1px solid #3a3a3a",
+                  border: "1px solid var(--border)",
                   fontSize: 14,
-                  color: "#a0a0a0",
-                  background: "#2d2d2d",
+                  color: "var(--text-secondary)",
+                  background: "var(--bg-elevated)",
                   outline: "none",
                   cursor: "not-allowed"
                 }}
@@ -531,7 +564,7 @@ export default function TrelloEmployee() {
             </div>
 
             <div style={{ marginBottom: 16 }}>
-              <label style={{ display: "block", marginBottom: 6, fontWeight: 600, fontSize: 14, color: "#ffffff" }}>Description</label>
+              <label style={{ display: "block", marginBottom: 6, fontWeight: 600, fontSize: 14, color: "var(--text-primary)" }}>Description</label>
               <textarea
                 value={editingCard.description || "No description"}
                 disabled
@@ -539,12 +572,12 @@ export default function TrelloEmployee() {
                   width: "100%",
                   padding: 10,
                   borderRadius: 6,
-                  border: "1px solid #3a3a3a",
+                  border: "1px solid var(--border)",
                   fontSize: 14,
                   minHeight: 80,
                   fontFamily: "inherit",
-                  color: "#a0a0a0",
-                  background: "#2d2d2d",
+                  color: "var(--text-secondary)",
+                  background: "var(--bg-elevated)",
                   outline: "none",
                   cursor: "not-allowed",
                   resize: "none"
@@ -565,21 +598,22 @@ export default function TrelloEmployee() {
                   borderRadius: 6,
                   border: "2px solid #CCFF00",
                   fontSize: 14,
-                  color: "#ffffff",
-                  background: "#2d2d2d",
+                  color: "var(--text-primary)",
+                  background: "var(--bg-elevated)",
                   outline: "none",
                   cursor: "pointer",
                   fontWeight: 600
                 }}
               >
-                <option value="Pending" style={{ background: "#2d2d2d" }}>⏳ Pending</option>
-                <option value="OnHold" style={{ background: "#2d2d2d" }}>⏸️ On Hold</option>
-                <option value="Completed" style={{ background: "#2d2d2d" }}>✅ Completed</option>
+                <option value="Pending" style={{ background: "var(--bg-elevated)" }}>⏳ Pending</option>
+                <option value="In Progress" style={{ background: "var(--bg-elevated)" }}>🔄 In Progress</option>
+                <option value="OnHold" style={{ background: "var(--bg-elevated)" }}>⏸️ On Hold</option>
+                <option value="Completed" style={{ background: "var(--bg-elevated)" }}>✅ Completed</option>
               </select>
             </div>
 
             <div style={{ marginBottom: 16 }}>
-              <label style={{ display: "block", marginBottom: 6, fontWeight: 600, fontSize: 14, color: "#ffffff" }}>Due Date</label>
+              <label style={{ display: "block", marginBottom: 6, fontWeight: 600, fontSize: 14, color: "var(--text-primary)" }}>Due Date</label>
               <input
                 type="date"
                 value={editingCard.dueDate ? editingCard.dueDate.split("T")[0] : ""}
@@ -588,10 +622,10 @@ export default function TrelloEmployee() {
                   width: "100%",
                   padding: 10,
                   borderRadius: 6,
-                  border: "1px solid #3a3a3a",
+                  border: "1px solid var(--border)",
                   fontSize: 14,
-                  color: "#a0a0a0",
-                  background: "#2d2d2d",
+                  color: "var(--text-secondary)",
+                  background: "var(--bg-elevated)",
                   outline: "none",
                   cursor: "not-allowed"
                 }}
@@ -603,8 +637,8 @@ export default function TrelloEmployee() {
                 onClick={() => setEditingCard(null)}
                 style={{
                   padding: "10px 20px",
-                  background: "#3a3a3a",
-                  color: "#ffffff",
+                  background: "var(--border)",
+                  color: "var(--text-primary)",
                   border: "none",
                   borderRadius: 6,
                   cursor: "pointer",
@@ -612,8 +646,8 @@ export default function TrelloEmployee() {
                   fontSize: 14,
                   transition: "all 0.2s ease"
                 }}
-                onMouseEnter={(e) => e.currentTarget.style.background = "#4a4a4a"}
-                onMouseLeave={(e) => e.currentTarget.style.background = "#3a3a3a"}
+                onMouseEnter={(e) => e.currentTarget.style.background = "var(--border-light)"}
+                onMouseLeave={(e) => e.currentTarget.style.background = "var(--border)"}
               >
                 Cancel
               </button>
@@ -626,7 +660,7 @@ export default function TrelloEmployee() {
                 style={{
                   padding: "10px 20px",
                   background: "#CCFF00",
-                  color: "#1a1a1a",
+                  color: "var(--bg-main)",
                   border: "none",
                   borderRadius: 6,
                   cursor: "pointer",

@@ -8,7 +8,11 @@ import {
   faCircleCheck,
   faCirclePause,
   faCirclePlay,
+  faSun,
+  faMoon,
 } from "@fortawesome/free-solid-svg-icons";
+import { useTheme } from "../context/ThemeContext";
+import { IconButton } from "@mui/material";
 
 type Task = {
   _id: string;
@@ -20,6 +24,7 @@ type Task = {
 
 export default function EmployeeDashboard() {
   const navigate = useNavigate();
+  const { isDarkMode, toggleTheme } = useTheme();
   const [tasks, setTasks] = useState<Task[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -228,25 +233,40 @@ export default function EmployeeDashboard() {
           </Typography>
         </Box>
 
-        <Button
-          onClick={handleLogout}
-          startIcon={<FontAwesomeIcon icon={faRightFromBracket} />}
-          sx={{
-            borderRadius: "8px",
-            px: 2.5,
-            py: 1,
-            color: "var(--text-secondary)",
-            textTransform: "none",
-            fontWeight: 500,
-            fontSize: "14px",
-            "&:hover": {
-              bgcolor: "var(--bg-hover)",
-              color: "var(--text-primary)",
-            },
-          }}
-        >
-          Logout
-        </Button>
+        <Box sx={{ display: "flex", gap: 1, alignItems: "center" }}>
+          <IconButton
+            onClick={toggleTheme}
+            sx={{
+              color: "var(--text-secondary)",
+              "&:hover": {
+                bgcolor: "var(--bg-hover)",
+                color: "var(--primary)",
+              },
+            }}
+          >
+            <FontAwesomeIcon icon={isDarkMode ? faSun : faMoon} />
+          </IconButton>
+
+          <Button
+            onClick={handleLogout}
+            startIcon={<FontAwesomeIcon icon={faRightFromBracket} />}
+            sx={{
+              borderRadius: "8px",
+              px: 2.5,
+              py: 1,
+              color: "var(--text-secondary)",
+              textTransform: "none",
+              fontWeight: 500,
+              fontSize: "14px",
+              "&:hover": {
+                bgcolor: "var(--bg-hover)",
+                color: "var(--text-primary)",
+              },
+            }}
+          >
+            Logout
+          </Button>
+        </Box>
       </Box>
 
       {/* Main Content */}
@@ -498,12 +518,16 @@ export default function EmployeeDashboard() {
                         ? "#f0fdf4"
                         : t.status === "OnHold"
                         ? "#fef2f2"
+                        : t.status === "In Progress"
+                        ? "#eff6ff"
                         : "#fef3c7",
                     border: `1px solid ${
                       t.status === "Completed"
                         ? "#bbf7d0"
                         : t.status === "OnHold"
                         ? "#fecaca"
+                        : t.status === "In Progress"
+                        ? "#bfdbfe"
                         : "#fde68a"
                     }`,
                     mb: 1.5,
@@ -519,6 +543,8 @@ export default function EmployeeDashboard() {
                           ? "var(--success)"
                           : t.status === "OnHold"
                           ? "var(--error)"
+                          : t.status === "In Progress"
+                          ? "#2563eb"
                           : "var(--warning)",
                     }}
                   >

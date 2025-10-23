@@ -7,6 +7,7 @@ import {
   type DropResult,
 } from "@hello-pangea/dnd";
 import "@fortawesome/fontawesome-free/css/all.min.css";
+import { useTheme } from "../context/ThemeContext";
 
 
 // --------- Types ----------
@@ -41,7 +42,7 @@ interface CardType {
   listId: string;
   assignedTo?: string | UserShort | null;
   position: number;
-  status?: "Pending" | "OnHold" | "Completed";
+  status?: "Pending" | "In Progress" | "OnHold" | "Completed";
   dueDate?: string | null;
 }
 
@@ -63,6 +64,7 @@ api.interceptors.request.use((config) => {
 
 // --------- Component ----------
 export default function TrelloBoard() {
+  const { isDarkMode, toggleTheme } = useTheme();
   const [boards, setBoards] = useState<Board[]>([]);
   const [selectedBoard, setSelectedBoard] = useState<Board | null>(null);
   const [lists, setLists] = useState<ListType[]>([]);
@@ -366,22 +368,48 @@ export default function TrelloBoard() {
 
   // --------- UI ----------
   return (
-    <div style={{ display: "flex", height: "100vh", fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif", background: "#1a1a1a" }}>
+    <div style={{ display: "flex", height: "100vh", fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif", background: "var(--bg-main)" }}>
       {/* Sidebar: Boards */}
       <div style={{
         width: 300,
-        borderRight: "1px solid #2d2d2d",
+        borderRight: "1px solid var(--border)",
         padding: 24,
-        background: "#252525",
-        boxShadow: "4px 0 24px rgba(0,0,0,0.3)",
+        background: "var(--bg-surface)",
+        boxShadow: "4px 0 24px var(--shadow)",
         zIndex: 10
       }}>
-        <div style={{ marginBottom: 20, textAlign: "center" }}>
+        <div style={{ marginBottom: 20, display: "flex", alignItems: "center", justifyContent: "space-between" }}>
           <img
             src="https://res.cloudinary.com/dpi82firq/image/upload/v1759321173/Site_Icon_1_la1sm9.png"
             alt="Sysovo Logo"
-            style={{ width: "140px", height: "auto" }}
+            style={{ width: "120px", height: "auto" }}
           />
+          <button
+            onClick={toggleTheme}
+            style={{
+              background: "transparent",
+              border: "none",
+              cursor: "pointer",
+              fontSize: "18px",
+              color: "var(--text-secondary)",
+              padding: "8px 10px",
+              borderRadius: "6px",
+              transition: "all 0.2s ease",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center"
+            }}
+            onMouseOver={(e) => {
+              e.currentTarget.style.background = "var(--bg-hover)";
+              e.currentTarget.style.color = "var(--primary)";
+            }}
+            onMouseOut={(e) => {
+              e.currentTarget.style.background = "transparent";
+              e.currentTarget.style.color = "var(--text-secondary)";
+            }}
+          >
+            <i className={isDarkMode ? "fas fa-sun" : "fas fa-moon"}></i>
+          </button>
         </div>
 
         <div style={{ marginBottom: 20 }}>
@@ -393,16 +421,16 @@ export default function TrelloBoard() {
               width: "100%",
               padding: 12,
               borderRadius: 8,
-              border: "1px solid #3a3a3a",
+              border: "1px solid var(--border)",
               marginBottom: 10,
               fontSize: 14,
-              color: "#ffffff",
-              background: "#2d2d2d",
+              color: "var(--text-primary)",
+              background: "var(--bg-elevated)",
               transition: "all 0.2s ease",
               outline: "none"
             }}
             onFocus={(e) => e.target.style.borderColor = "#CCFF00"}
-            onBlur={(e) => e.target.style.borderColor = "#3a3a3a"}
+            onBlur={(e) => e.target.style.borderColor = "var(--border)"}
           />
           <input
             placeholder="Description (optional)"
@@ -412,16 +440,16 @@ export default function TrelloBoard() {
               width: "100%",
               padding: 12,
               borderRadius: 8,
-              border: "1px solid #3a3a3a",
+              border: "1px solid var(--border)",
               marginBottom: 12,
               fontSize: 14,
-              color: "#ffffff",
-              background: "#2d2d2d",
+              color: "var(--text-primary)",
+              background: "var(--bg-elevated)",
               transition: "all 0.2s ease",
               outline: "none"
             }}
             onFocus={(e) => e.target.style.borderColor = "#CCFF00"}
-            onBlur={(e) => e.target.style.borderColor = "#3a3a3a"}
+            onBlur={(e) => e.target.style.borderColor = "var(--border)"}
           />
           <button
             onClick={handleCreateBoard}
@@ -429,7 +457,7 @@ export default function TrelloBoard() {
               width: "100%",
               padding: 12,
               background: "#CCFF00",
-              color: "#1a1a1a",
+              color: "var(--bg-main)",
               border: "none",
               borderRadius: 8,
               cursor: "pointer",
@@ -452,7 +480,7 @@ export default function TrelloBoard() {
         </div>
 
         <div style={{ maxHeight: "calc(100vh - 280px)", overflowY: "auto", overflowX: "hidden" }}>
-          {loading ? <div style={{ textAlign: "center", color: "#a0a0a0", fontSize: 14 }}>Loading...</div> : null}
+          {loading ? <div style={{ textAlign: "center", color: "var(--text-secondary)", fontSize: 14 }}>Loading...</div> : null}
           {boards.map((b) => (
             <div
               key={b._id}
@@ -463,8 +491,8 @@ export default function TrelloBoard() {
                 cursor: "pointer",
                 background: selectedBoard?._id === b._id
                   ? "#CCFF00"
-                  : "#2d2d2d",
-                border: selectedBoard?._id === b._id ? "2px solid #CCFF00" : "1px solid #3a3a3a",
+                  : "var(--bg-elevated)",
+                border: selectedBoard?._id === b._id ? "2px solid #CCFF00" : "1px solid var(--border)",
                 position: "relative",
                 transition: "all 0.2s ease",
                 boxShadow: selectedBoard?._id === b._id
@@ -473,14 +501,14 @@ export default function TrelloBoard() {
               }}
               onMouseEnter={(e) => {
                 if (selectedBoard?._id !== b._id) {
-                  e.currentTarget.style.background = "#333333";
-                  e.currentTarget.style.borderColor = "#4a4a4a";
+                  e.currentTarget.style.background = "var(--bg-hover)";
+                  e.currentTarget.style.borderColor = "var(--border-light)";
                 }
               }}
               onMouseLeave={(e) => {
                 if (selectedBoard?._id !== b._id) {
-                  e.currentTarget.style.background = "#2d2d2d";
-                  e.currentTarget.style.borderColor = "#3a3a3a";
+                  e.currentTarget.style.background = "var(--bg-elevated)";
+                  e.currentTarget.style.borderColor = "var(--border)";
                 }
               }}
             >
@@ -489,7 +517,7 @@ export default function TrelloBoard() {
                   fontWeight: 600,
                   fontSize: 14,
                   marginBottom: 3,
-                  color: selectedBoard?._id === b._id ? "#1a1a1a" : "#ffffff",
+                  color: selectedBoard?._id === b._id ? "var(--bg-main)" : "var(--text-primary)",
                   letterSpacing: "-0.2px",
                   whiteSpace: "nowrap",
                   overflow: "hidden",
@@ -497,7 +525,7 @@ export default function TrelloBoard() {
                 }}>{b.name}</div>
                 <div style={{
                   fontSize: 11,
-                  color: selectedBoard?._id === b._id ? "#333333" : "#a0a0a0",
+                  color: selectedBoard?._id === b._id ? "var(--bg-hover)" : "var(--text-secondary)",
                   lineHeight: 1.3,
                   whiteSpace: "nowrap",
                   overflow: "hidden",
@@ -545,11 +573,11 @@ export default function TrelloBoard() {
           <div style={{
             padding: 80,
             textAlign: "center",
-            color: "#a0a0a0",
+            color: "var(--text-secondary)",
             fontSize: 16,
-            background: "#252525",
+            background: "var(--bg-surface)",
             borderRadius: 16,
-            border: "1px solid #3a3a3a"
+            border: "1px solid var(--border)"
           }}>
             <i className="fas fa-arrow-left" style={{ marginRight: 10, fontSize: 18 }}></i>
             Select a board to view lists & cards
@@ -561,21 +589,21 @@ export default function TrelloBoard() {
               alignItems: "center",
               justifyContent: "space-between",
               marginBottom: 24,
-              background: "#252525",
+              background: "var(--bg-surface)",
               padding: 20,
               borderRadius: 12,
               boxShadow: "0 4px 16px rgba(0,0,0,0.3)",
-              border: "1px solid #3a3a3a"
+              border: "1px solid var(--border)"
             }}>
               <div>
                 <h2 style={{
                   margin: "0 0 6px 0",
                   fontSize: 28,
                   fontWeight: 700,
-                  color: "#ffffff",
+                  color: "var(--text-primary)",
                   letterSpacing: "-0.5px"
                 }}>{selectedBoard.name}</h2>
-                <div style={{ fontSize: 14, color: "#a0a0a0" }}>{selectedBoard.description || "No description"}</div>
+                <div style={{ fontSize: 14, color: "var(--text-secondary)" }}>{selectedBoard.description || "No description"}</div>
               </div>
 
               <div style={{ display: "flex", gap: 12, alignItems: "center" }}>
@@ -583,9 +611,9 @@ export default function TrelloBoard() {
                   onClick={() => setShowMembersModal(true)}
                   style={{
                     padding: "12px 18px",
-                    background: "#ffffff",
-                    color: "#1a1a1a",
-                    border: "1px solid #3a3a3a",
+                    background: "var(--text-primary)",
+                    color: "var(--bg-main)",
+                    border: "1px solid var(--border)",
                     borderRadius: 8,
                     cursor: "pointer",
                     fontWeight: 600,
@@ -597,7 +625,7 @@ export default function TrelloBoard() {
                     e.currentTarget.style.transform = "translateY(-2px)";
                   }}
                   onMouseLeave={(e) => {
-                    e.currentTarget.style.background = "#ffffff";
+                    e.currentTarget.style.background = "var(--text-primary)";
                     e.currentTarget.style.transform = "translateY(0)";
                   }}
                 >
@@ -612,23 +640,23 @@ export default function TrelloBoard() {
                   style={{
                     padding: 12,
                     borderRadius: 8,
-                    border: "1px solid #3a3a3a",
+                    border: "1px solid var(--border)",
                     width: 200,
                     fontSize: 14,
-                    color: "#ffffff",
-                    background: "#2d2d2d",
+                    color: "var(--text-primary)",
+                    background: "var(--bg-elevated)",
                     transition: "all 0.2s ease",
                     outline: "none"
                   }}
                   onFocus={(e) => e.target.style.borderColor = "#CCFF00"}
-                  onBlur={(e) => e.target.style.borderColor = "#3a3a3a"}
+                  onBlur={(e) => e.target.style.borderColor = "var(--border)"}
                 />
                 <button
                   onClick={handleCreateList}
                   style={{
                     padding: "12px 18px",
                     background: "#CCFF00",
-                    color: "#1a1a1a",
+                    color: "var(--bg-main)",
                     border: "none",
                     borderRadius: 8,
                     cursor: "pointer",
@@ -665,11 +693,11 @@ export default function TrelloBoard() {
                               style={{
                                 minWidth: 300,
                                 maxWidth: 320,
-                                background: "#252525",
+                                background: "var(--bg-surface)",
                                 padding: 14,
                                 borderRadius: 12,
                                 boxShadow: "0 4px 16px rgba(0,0,0,0.3)",
-                                border: "1px solid #3a3a3a",
+                                border: "1px solid var(--border)",
                                 ...providedList.draggableProps.style,
                               }}
                             >
@@ -679,18 +707,18 @@ export default function TrelloBoard() {
                                 alignItems: "center",
                                 marginBottom: 12,
                                 paddingBottom: 10,
-                                borderBottom: "2px solid #3a3a3a"
+                                borderBottom: "2px solid var(--border)"
                               }}>
                                 <strong style={{
                                   fontSize: 16,
                                   fontWeight: 700,
-                                  color: "#ffffff",
+                                  color: "var(--text-primary)",
                                   letterSpacing: "-0.3px"
                                 }}>{list.title}</strong>
                                 <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
                                   <span style={{
                                     fontSize: 12,
-                                    color: "#1a1a1a",
+                                    color: "var(--bg-main)",
                                     background: "#CCFF00",
                                     padding: "4px 10px",
                                     borderRadius: 12,
@@ -734,35 +762,35 @@ export default function TrelloBoard() {
                                               padding: 12,
                                               marginBottom: 8,
                                               borderRadius: 8,
-                                              background: "#2d2d2d",
+                                              background: "var(--bg-elevated)",
                                               boxShadow: "0 2px 8px rgba(0,0,0,0.2)",
                                               cursor: "pointer",
                                               position: "relative",
-                                              border: "1px solid #3a3a3a",
+                                              border: "1px solid var(--border)",
                                               transition: "all 0.2s ease",
                                               ...providedCard.draggableProps.style,
                                             }}
                                             onMouseEnter={(e) => {
-                                              e.currentTarget.style.background = "#333333";
+                                              e.currentTarget.style.background = "var(--bg-hover)";
                                               e.currentTarget.style.borderColor = "#CCFF00";
                                             }}
                                             onMouseLeave={(e) => {
-                                              e.currentTarget.style.background = "#2d2d2d";
-                                              e.currentTarget.style.borderColor = "#3a3a3a";
+                                              e.currentTarget.style.background = "var(--bg-elevated)";
+                                              e.currentTarget.style.borderColor = "var(--border)";
                                             }}
                                           >
                                             <div style={{
                                               fontWeight: 600,
                                               fontSize: 15,
                                               marginBottom: 8,
-                                              color: "#ffffff",
+                                              color: "var(--text-primary)",
                                               letterSpacing: "-0.3px",
                                               lineHeight: 1.4
                                             }}>{card.title}</div>
                                             {card.description && (
                                               <div style={{
                                                 fontSize: 13,
-                                                color: "#a0a0a0",
+                                                color: "var(--text-secondary)",
                                                 marginBottom: 10,
                                                 lineHeight: 1.5
                                               }}>{card.description}</div>
@@ -790,8 +818,8 @@ export default function TrelloBoard() {
                                               {card.assignedTo && (
                                                 <span style={{
                                                   fontSize: 11,
-                                                  color: "#ffffff",
-                                                  background: "#3a3a3a",
+                                                  color: "var(--text-primary)",
+                                                  background: "var(--border)",
                                                   padding: "4px 10px",
                                                   borderRadius: 14,
                                                   fontWeight: 600
@@ -803,8 +831,8 @@ export default function TrelloBoard() {
                                               {card.dueDate && (
                                                 <span style={{
                                                   fontSize: 11,
-                                                  color: "#ffffff",
-                                                  background: "#3a3a3a",
+                                                  color: "var(--text-primary)",
+                                                  background: "var(--border)",
                                                   padding: "4px 10px",
                                                   borderRadius: 14,
                                                   fontWeight: 600
@@ -859,16 +887,16 @@ export default function TrelloBoard() {
                                     width: "100%",
                                     padding: 10,
                                     borderRadius: 6,
-                                    border: "1px solid #3a3a3a",
+                                    border: "1px solid var(--border)",
                                     fontSize: 14,
                                     marginBottom: 6,
-                                    color: "#ffffff",
-                                    background: "#2d2d2d",
+                                    color: "var(--text-primary)",
+                                    background: "var(--bg-elevated)",
                                     outline: "none",
                                     transition: "all 0.2s ease"
                                   }}
                                   onFocus={(e) => e.target.style.borderColor = "#CCFF00"}
-                                  onBlur={(e) => e.target.style.borderColor = "#3a3a3a"}
+                                  onBlur={(e) => e.target.style.borderColor = "var(--border)"}
                                 />
                                 <button
                                   onClick={() => handleCreateCard(list._id)}
@@ -876,7 +904,7 @@ export default function TrelloBoard() {
                                     width: "100%",
                                     padding: 8,
                                     background: "#CCFF00",
-                                    color: "#1a1a1a",
+                                    color: "var(--bg-main)",
                                     border: "none",
                                     borderRadius: 6,
                                     cursor: "pointer",
@@ -925,23 +953,23 @@ export default function TrelloBoard() {
           <div
             onClick={(e) => e.stopPropagation()}
             style={{
-              background: "#252525",
+              background: "var(--bg-surface)",
               borderRadius: 12,
               padding: 24,
               width: 500,
               maxHeight: "80vh",
               overflowY: "auto",
               boxShadow: "0 8px 32px rgba(0,0,0,0.5)",
-              border: "1px solid #3a3a3a"
+              border: "1px solid var(--border)"
             }}
           >
-            <h3 style={{ margin: "0 0 20px 0", fontSize: 20, fontWeight: 700, color: "#ffffff" }}>
+            <h3 style={{ margin: "0 0 20px 0", fontSize: 20, fontWeight: 700, color: "var(--text-primary)" }}>
               <i className="fas fa-edit" style={{ marginRight: 8, color: "#CCFF00" }}></i>
               Edit Card
             </h3>
 
             <div style={{ marginBottom: 16 }}>
-              <label style={{ display: "block", marginBottom: 6, fontWeight: 600, fontSize: 14, color: "#ffffff" }}>Title</label>
+              <label style={{ display: "block", marginBottom: 6, fontWeight: 600, fontSize: 14, color: "var(--text-primary)" }}>Title</label>
               <input
                 value={editingCard.title}
                 onChange={(e) => setEditingCard({ ...editingCard, title: e.target.value })}
@@ -949,19 +977,19 @@ export default function TrelloBoard() {
                   width: "100%",
                   padding: 10,
                   borderRadius: 6,
-                  border: "1px solid #3a3a3a",
+                  border: "1px solid var(--border)",
                   fontSize: 14,
-                  color: "#ffffff",
-                  background: "#2d2d2d",
+                  color: "var(--text-primary)",
+                  background: "var(--bg-elevated)",
                   outline: "none"
                 }}
                 onFocus={(e) => e.target.style.borderColor = "#CCFF00"}
-                onBlur={(e) => e.target.style.borderColor = "#3a3a3a"}
+                onBlur={(e) => e.target.style.borderColor = "var(--border)"}
               />
             </div>
 
             <div style={{ marginBottom: 16 }}>
-              <label style={{ display: "block", marginBottom: 6, fontWeight: 600, fontSize: 14, color: "#ffffff" }}>Description</label>
+              <label style={{ display: "block", marginBottom: 6, fontWeight: 600, fontSize: 14, color: "var(--text-primary)" }}>Description</label>
               <textarea
                 value={editingCard.description || ""}
                 onChange={(e) => setEditingCard({ ...editingCard, description: e.target.value })}
@@ -969,21 +997,21 @@ export default function TrelloBoard() {
                   width: "100%",
                   padding: 10,
                   borderRadius: 6,
-                  border: "1px solid #3a3a3a",
+                  border: "1px solid var(--border)",
                   fontSize: 14,
                   minHeight: 80,
                   fontFamily: "inherit",
-                  color: "#ffffff",
-                  background: "#2d2d2d",
+                  color: "var(--text-primary)",
+                  background: "var(--bg-elevated)",
                   outline: "none"
                 }}
                 onFocus={(e) => e.target.style.borderColor = "#CCFF00"}
-                onBlur={(e) => e.target.style.borderColor = "#3a3a3a"}
+                onBlur={(e) => e.target.style.borderColor = "var(--border)"}
               />
             </div>
 
             <div style={{ marginBottom: 16 }}>
-              <label style={{ display: "block", marginBottom: 6, fontWeight: 600, fontSize: 14, color: "#ffffff" }}>Status</label>
+              <label style={{ display: "block", marginBottom: 6, fontWeight: 600, fontSize: 14, color: "var(--text-primary)" }}>Status</label>
               <select
                 value={editingCard.status || "Pending"}
                 onChange={(e) => setEditingCard({ ...editingCard, status: e.target.value as any })}
@@ -991,21 +1019,22 @@ export default function TrelloBoard() {
                   width: "100%",
                   padding: 10,
                   borderRadius: 6,
-                  border: "1px solid #3a3a3a",
+                  border: "1px solid var(--border)",
                   fontSize: 14,
-                  color: "#ffffff",
-                  background: "#2d2d2d",
+                  color: "var(--text-primary)",
+                  background: "var(--bg-elevated)",
                   outline: "none"
                 }}
               >
                 <option value="Pending">Pending</option>
+                <option value="In Progress">In Progress</option>
                 <option value="OnHold">On Hold</option>
                 <option value="Completed">Completed</option>
               </select>
             </div>
 
             <div style={{ marginBottom: 16 }}>
-              <label style={{ display: "block", marginBottom: 6, fontWeight: 600, fontSize: 14, color: "#ffffff" }}>Due Date</label>
+              <label style={{ display: "block", marginBottom: 6, fontWeight: 600, fontSize: 14, color: "var(--text-primary)" }}>Due Date</label>
               <input
                 type="date"
                 value={editingCard.dueDate ? editingCard.dueDate.split("T")[0] : ""}
@@ -1014,17 +1043,17 @@ export default function TrelloBoard() {
                   width: "100%",
                   padding: 10,
                   borderRadius: 6,
-                  border: "1px solid #3a3a3a",
+                  border: "1px solid var(--border)",
                   fontSize: 14,
-                  color: "#ffffff",
-                  background: "#2d2d2d",
+                  color: "var(--text-primary)",
+                  background: "var(--bg-elevated)",
                   outline: "none"
                 }}
               />
             </div>
 
             <div style={{ marginBottom: 16 }}>
-              <label style={{ display: "block", marginBottom: 6, fontWeight: 600, fontSize: 14, color: "#ffffff" }}>Assign To</label>
+              <label style={{ display: "block", marginBottom: 6, fontWeight: 600, fontSize: 14, color: "var(--text-primary)" }}>Assign To</label>
               <select
                 value={(editingCard.assignedTo as any)?._id || editingCard.assignedTo || ""}
                 onChange={(e) => setEditingCard({ ...editingCard, assignedTo: e.target.value })}
@@ -1032,16 +1061,16 @@ export default function TrelloBoard() {
                   width: "100%",
                   padding: 10,
                   borderRadius: 6,
-                  border: "1px solid #3a3a3a",
+                  border: "1px solid var(--border)",
                   fontSize: 14,
-                  color: "#ffffff",
-                  background: "#2d2d2d",
+                  color: "var(--text-primary)",
+                  background: "var(--bg-elevated)",
                   outline: "none"
                 }}
               >
-                <option value="" style={{ background: "#2d2d2d", color: "#a0a0a0" }}>Unassigned</option>
+                <option value="" style={{ background: "var(--bg-elevated)", color: "var(--text-secondary)" }}>Unassigned</option>
                 {allUsers.map((user) => (
-                  <option key={user._id} value={user._id} style={{ background: "#2d2d2d", color: "#ffffff" }}>
+                  <option key={user._id} value={user._id} style={{ background: "var(--bg-elevated)", color: "var(--text-primary)" }}>
                     {user.name} - {user.email}
                   </option>
                 ))}
@@ -1053,8 +1082,8 @@ export default function TrelloBoard() {
                 onClick={() => setEditingCard(null)}
                 style={{
                   padding: "10px 20px",
-                  background: "#3a3a3a",
-                  color: "#ffffff",
+                  background: "var(--border)",
+                  color: "var(--text-primary)",
                   border: "none",
                   borderRadius: 6,
                   cursor: "pointer",
@@ -1062,8 +1091,8 @@ export default function TrelloBoard() {
                   fontSize: 14,
                   transition: "all 0.2s ease"
                 }}
-                onMouseEnter={(e) => e.currentTarget.style.background = "#4a4a4a"}
-                onMouseLeave={(e) => e.currentTarget.style.background = "#3a3a3a"}
+                onMouseEnter={(e) => e.currentTarget.style.background = "var(--border-light)"}
+                onMouseLeave={(e) => e.currentTarget.style.background = "var(--border)"}
               >
                 Cancel
               </button>
@@ -1080,7 +1109,7 @@ export default function TrelloBoard() {
                 style={{
                   padding: "10px 20px",
                   background: "#CCFF00",
-                  color: "#1a1a1a",
+                  color: "var(--bg-main)",
                   border: "none",
                   borderRadius: 6,
                   cursor: "pointer",
@@ -1118,21 +1147,21 @@ export default function TrelloBoard() {
           <div
             onClick={(e) => e.stopPropagation()}
             style={{
-              background: "#252525",
+              background: "var(--bg-surface)",
               borderRadius: 12,
               padding: 24,
               width: 400,
               boxShadow: "0 8px 32px rgba(0,0,0,0.5)",
-              border: "1px solid #3a3a3a"
+              border: "1px solid var(--border)"
             }}
           >
-            <h3 style={{ margin: "0 0 20px 0", fontSize: 20, fontWeight: 700, color: "#ffffff" }}>
+            <h3 style={{ margin: "0 0 20px 0", fontSize: 20, fontWeight: 700, color: "var(--text-primary)" }}>
               <i className="fas fa-user-plus" style={{ marginRight: 8, color: "#CCFF00" }}></i>
               Add Member to Board
             </h3>
 
             <div style={{ marginBottom: 16 }}>
-              <label style={{ display: "block", marginBottom: 6, fontWeight: 600, fontSize: 14, color: "#ffffff" }}>Select Employee</label>
+              <label style={{ display: "block", marginBottom: 6, fontWeight: 600, fontSize: 14, color: "var(--text-primary)" }}>Select Employee</label>
               <select
                 value={selectedMemberId}
                 onChange={(e) => setSelectedMemberId(e.target.value)}
@@ -1140,22 +1169,22 @@ export default function TrelloBoard() {
                   width: "100%",
                   padding: 10,
                   borderRadius: 6,
-                  border: "1px solid #3a3a3a",
+                  border: "1px solid var(--border)",
                   fontSize: 14,
-                  color: "#ffffff",
-                  background: "#2d2d2d",
+                  color: "var(--text-primary)",
+                  background: "var(--bg-elevated)",
                   outline: "none"
                 }}
               >
-                <option value="" style={{ background: "#2d2d2d", color: "#a0a0a0" }}>Select a user...</option>
-                <option value="all" style={{ background: "#2d2d2d", color: "#CCFF00", fontWeight: 700 }}>✓ All Employees ({allUsers.length})</option>
+                <option value="" style={{ background: "var(--bg-elevated)", color: "var(--text-secondary)" }}>Select a user...</option>
+                <option value="all" style={{ background: "var(--bg-elevated)", color: "#CCFF00", fontWeight: 700 }}>✓ All Employees ({allUsers.length})</option>
                 {allUsers.map((user) => (
-                  <option key={user._id} value={user._id} style={{ background: "#2d2d2d", color: "#ffffff" }}>
+                  <option key={user._id} value={user._id} style={{ background: "var(--bg-elevated)", color: "var(--text-primary)" }}>
                     {user.name} - {user.subRole || "N/A"}
                   </option>
                 ))}
               </select>
-              <div style={{ fontSize: 12, color: "#a0a0a0", marginTop: 6 }}>
+              <div style={{ fontSize: 12, color: "var(--text-secondary)", marginTop: 6 }}>
                 Select an employee to add to this board
               </div>
             </div>
@@ -1168,8 +1197,8 @@ export default function TrelloBoard() {
                 }}
                 style={{
                   padding: "10px 20px",
-                  background: "#3a3a3a",
-                  color: "#ffffff",
+                  background: "var(--border)",
+                  color: "var(--text-primary)",
                   border: "none",
                   borderRadius: 6,
                   cursor: "pointer",
@@ -1177,8 +1206,8 @@ export default function TrelloBoard() {
                   fontSize: 14,
                   transition: "all 0.2s ease"
                 }}
-                onMouseEnter={(e) => e.currentTarget.style.background = "#4a4a4a"}
-                onMouseLeave={(e) => e.currentTarget.style.background = "#3a3a3a"}
+                onMouseEnter={(e) => e.currentTarget.style.background = "var(--border-light)"}
+                onMouseLeave={(e) => e.currentTarget.style.background = "var(--border)"}
               >
                 Cancel
               </button>
@@ -1187,7 +1216,7 @@ export default function TrelloBoard() {
                 style={{
                   padding: "10px 20px",
                   background: "#CCFF00",
-                  color: "#1a1a1a",
+                  color: "var(--bg-main)",
                   border: "none",
                   borderRadius: 6,
                   cursor: "pointer",
