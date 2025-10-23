@@ -35,6 +35,7 @@ interface ListType {
   cards?: CardType[];
 }
 
+
 interface CardType {
   _id: string;
   title: string;

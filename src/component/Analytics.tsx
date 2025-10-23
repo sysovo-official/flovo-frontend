@@ -8,7 +8,6 @@ import {
   Select,
   MenuItem,
   IconButton,
-  Grid,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import api from "../config/api";
@@ -50,7 +49,7 @@ export default function Analytics() {
   const navigate = useNavigate();
   const { isDarkMode, toggleTheme } = useTheme();
   const [timeRange, setTimeRange] = useState<"daily" | "weekly" | "monthly" | "yearly">("monthly");
-  const [employees, setEmployees] = useState<Employee[]>([]);
+  const [, setEmployees] = useState<Employee[]>([]);
   const [analyticsData, setAnalyticsData] = useState<EmployeeStats[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedDate, setSelectedDate] = useState(new Date());
@@ -283,8 +282,8 @@ export default function Analytics() {
         </Box>
 
         {/* Summary Cards */}
-        <Grid container spacing={3} sx={{ mb: 4 }}>
-          <Grid item xs={12} sm={6} md={3}>
+        <Box sx={{ display: "grid", gridTemplateColumns: { xs: "1fr", sm: "repeat(2, 1fr)", md: "repeat(4, 1fr)" }, gap: 3, mb: 4 }}>
+          <Box>
             <Card
               sx={{
                 bgcolor: "var(--bg-surface)",
@@ -323,9 +322,9 @@ export default function Analytics() {
                 </Box>
               </CardContent>
             </Card>
-          </Grid>
+          </Box>
 
-          <Grid item xs={12} sm={6} md={3}>
+          <Box>
             <Card
               sx={{
                 bgcolor: "var(--bg-surface)",
@@ -364,9 +363,9 @@ export default function Analytics() {
                 </Box>
               </CardContent>
             </Card>
-          </Grid>
+          </Box>
 
-          <Grid item xs={12} sm={6} md={3}>
+          <Box>
             <Card
               sx={{
                 bgcolor: "var(--bg-surface)",
@@ -405,9 +404,9 @@ export default function Analytics() {
                 </Box>
               </CardContent>
             </Card>
-          </Grid>
+          </Box>
 
-          <Grid item xs={12} sm={6} md={3}>
+          <Box>
             <Card
               sx={{
                 bgcolor: "var(--bg-surface)",
@@ -446,8 +445,8 @@ export default function Analytics() {
                 </Box>
               </CardContent>
             </Card>
-          </Grid>
-        </Grid>
+          </Box>
+        </Box>
 
         {/* Employee Stats Table */}
         <Box
